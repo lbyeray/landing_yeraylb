@@ -363,32 +363,86 @@ const provinces = [
 
     // Form Submission & Webhook Handling
     if (leadForm) {
+      const nombreInput = document.getElementById('nombre') as HTMLInputElement;
+      const telefonoInput = document.getElementById('telefono') as HTMLInputElement;
+      const provinciaSelect = document.getElementById('provincia') as HTMLSelectElement;
+      const privacyCheck = document.getElementById('privacy') as HTMLInputElement;
+
+      // Clean red border on input
+      [nombreInput, telefonoInput, provinciaSelect, privacyCheck].forEach((el) => {
+        if (!el) return;
+        el.addEventListener('input', () => {
+          el.classList.remove('border-rose-500', 'ring-1', 'ring-rose-500');
+          if (formError) formError.classList.add('hidden');
+        });
+      });
+
       leadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         if (formError) formError.classList.add('hidden');
 
-        const nombreInput = document.getElementById('nombre') as HTMLInputElement;
-        const telefonoInput = document.getElementById('telefono') as HTMLInputElement;
-        const provinciaSelect = document.getElementById('provincia') as HTMLSelectElement;
-        const privacyCheck = document.getElementById('privacy') as HTMLInputElement;
-
-        if (!nombreInput.value.trim() || !telefonoInput.value.trim() || !provinciaSelect.value || !privacyCheck.checked) {
+        // Validation 1: Nombre (mínimo 3 caracteres)
+        const nombreVal = nombreInput.value.trim();
+        if (nombreVal.length < 3) {
+          nombreInput.classList.add('border-rose-500', 'ring-1', 'ring-rose-500');
           if (formError) {
-            formError.textContent = 'Por favor, completa todos los campos requeridos y acepta la política de privacidad.';
+            formError.textContent = 'Por favor, introduce tu nombre completo válido (mínimo 3 caracteres).';
             formError.classList.remove('hidden');
           }
+          nombreInput.focus();
           return;
         }
 
-        formData.nombre = nombreInput.value.trim();
-        formData.telefono = telefonoInput.value.trim();
+        // Validation 2: Teléfono móvil en España (9 dígitos, comenzando por 6, 7, 8 o 9)
+        const rawPhone = telefonoInput.value.replace(/\s+/g, '').replace(/-/g, '').replace(/\+34/, '');
+        const phoneRegex = /^[6789]\d{8}$/;
+        if (!phoneRegex.test(rawPhone)) {
+          telefonoInput.classList.add('border-rose-500', 'ring-1', 'ring-rose-500');
+          if (formError) {
+            formError.textContent = 'Por favor, escribe un número de teléfono móvil válido en España (9 dígitos).';
+            formError.classList.remove('hidden');
+          }
+          telefonoInput.focus();
+          return;
+        }
+
+        // Validation 3: Selección de Provincia
+        if (!provinciaSelect.value) {
+          provinciaSelect.classList.add('border-rose-500', 'ring-1', 'ring-rose-500');
+          if (formError) {
+            formError.textContent = 'Por favor, selecciona tu provincia de residencia.';
+            formError.classList.remove('hidden');
+          }
+          provinciaSelect.focus();
+          return;
+        }
+
+        // Validation 4: Checkbox de Privacidad
+        if (!privacyCheck.checked) {
+          privacyCheck.classList.add('ring-2', 'ring-rose-500');
+          if (formError) {
+            formError.textContent = 'Debes aceptar la política de privacidad para solicitar tu evaluación gratuita.';
+            formError.classList.remove('hidden');
+          }
+          privacyCheck.focus();
+          return;
+        }
+
+        formData.nombre = nombreVal;
+        formData.telefono = rawPhone;
         formData.provincia = provinciaSelect.value;
         formData.fecha = new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' });
 
         // Disable button while submitting
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
+        submitBtn.innerHTML = `
+          <svg class="animate-spin h-5 w-5 text-slate-950 inline-block mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span>Procesando solicitud...</span>
+        `;
 
         // Google Sheets Webhook Submission
         const webhookUrl = (import.meta as any).env?.PUBLIC_GOOGLE_SHEETS_WEBHOOK_URL;
