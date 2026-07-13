@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://landingyeraylb.vercel.app/sitemap.xml
+Sitemap: https://defensadeudor.es/sitemap.xml

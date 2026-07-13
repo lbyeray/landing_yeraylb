@@ -10,7 +10,7 @@ interface Props {
 const {
   title = "Defensa del Deudor | Ley de Segunda Oportunidad en España",
   description = "Comprueba en 30 segundos si cumples los requisitos legales para cancelar hasta el 100% de tus deudas en España conforme al Real Decreto-ley 1/2015.",
-  canonicalUrl = "https://landingyeraylb.vercel.app/"
+  canonicalUrl = "https://defensadeudor.es/"
 } = Astro.props;
 
 const jsonLdSchema = {
@@ -18,7 +18,7 @@ const jsonLdSchema = {
   "@graph": [
     {
       "@type": "LegalService",
-      "@id": "https://landingyeraylb.vercel.app/#service",
+      "@id": "https://defensadeudor.es/#service",
       "name": "Defensa del Deudor",
       "description": description,
       "url": canonicalUrl,
