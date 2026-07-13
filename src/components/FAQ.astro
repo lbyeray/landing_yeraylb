@@ -1,0 +1,82 @@
+---
+const faqs = [
+  {
+    question: "¿Qué es la Ley de Segunda Oportunidad y a quién beneficia?",
+    answer: "La Ley de Segunda Oportunidad (Real Decreto-ley 1/2015) es un mecanismo legal en España que permite a particulares y autónomos sobreendeudados o en situación de insolvencia cancelar hasta el 100% de sus deudas no impagables y empezar de cero sin embargos."
+  },
+  {
+    question: "¿Es posible paralizar embargos de nómina y vivienda de inmediato?",
+    answer: "Sí. Una vez iniciado el procedimiento legal conforme a la Ley de Segunda Oportunidad, la ley exige la congelación e interrupción inmediata de todas las ejecuciones de embargo, así como la parada del cobro de intereses y llamadas de acoso de cobradores."
+  },
+  {
+    question: "¿Qué tipo de deudas se pueden cancelar?",
+    answer: "Se pueden cancelar préstamos personales, tarjetas de crédito, microcréditos, deudas con entidades bancarias, financieras y parte de las deudas con Administraciones Públicas (Hacienda y Seguridad Social) conforme a las sentencias del Tribunal Supremo."
+  },
+  {
+    question: "¿Cuánto cuesta la evaluación inicial de mi caso?",
+    answer: "La evaluación inicial de viabilidad es 100% gratuita y sin compromiso. Analizamos tu situación de endeudamiento en menos de 24-48 horas y un abogado especialista en tu provincia te explicará de forma clara tus opciones legales."
+  }
+];
+---
+
+<section id="faq" class="py-16 relative">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <!-- Section Header -->
+    <div class="text-center mb-12">
+      <span class="text-xs font-bold tracking-widest text-slate-400 uppercase bg-slate-900 border border-slate-800 px-3 py-1 rounded-md mb-3 inline-block">
+        PREGUNTAS FRECUENTES
+      </span>
+      <h2 class="font-display text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+        Todo lo que necesitas saber antes de empezar.
+      </h2>
+    </div>
+
+    <!-- Accordion Wrapper -->
+    <div class="space-y-4">
+      {faqs.map((faq, index) => (
+        <div class="faq-item glass-card rounded-2xl border border-slate-800/80 overflow-hidden transition-all duration-200">
+          <button 
+            type="button" 
+            class="faq-toggle w-full px-6 py-5 text-left font-display font-bold text-slate-100 flex items-center justify-between gap-4 text-base sm:text-lg hover:text-emerald-400 transition-colors"
+          >
+            <span>{faq.question}</span>
+            <div class="w-7 h-7 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-emerald-400 shrink-0 transition-transform duration-300 icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </div>
+          </button>
+          
+          <div class="faq-answer hidden px-6 pb-6 text-sm text-slate-400 leading-relaxed border-t border-slate-800/40 pt-4">
+            {faq.answer}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggles = document.querySelectorAll('.faq-toggle');
+
+    toggles.forEach((toggle) => {
+      toggle.addEventListener('click', () => {
+        const item = toggle.closest('.faq-item');
+        const answer = item?.querySelector('.faq-answer');
+        const icon = item?.querySelector('.icon-wrapper svg');
+
+        const isOpen = !answer?.classList.contains('hidden');
+
+        // Close all other items
+        document.querySelectorAll('.faq-answer').forEach((el) => el.classList.add('hidden'));
+        document.querySelectorAll('.icon-wrapper svg').forEach((el) => el.classList.remove('rotate-180'));
+
+        if (!isOpen && answer && icon) {
+          answer.classList.remove('hidden');
+          icon.classList.add('rotate-180');
+        }
+      });
+    });
+  });
+</script>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://landingyeraylb.vercel.app/sitemap.xml
