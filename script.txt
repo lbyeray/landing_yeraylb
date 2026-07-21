@@ -1,0 +1,27 @@
+function doPost(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
+    
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["Fecha", "Nombre", "Teléfono", "Provincia", "Deudas", "Entidades", "Ingresos", "Urgencia"]);
+    }
+    
+    sheet.appendRow([
+      data.fecha || new Date().toLocaleString("es-ES", { timeZone: "Europe/Madrid" }),
+      data.nombre || "",
+      data.telefono || "",
+      data.provincia || "",
+      data.deudas || "",
+      data.entidades || "",
+      data.ingresos || "",
+      data.urgencia || ""
+    ]);
+    
+    return ContentService.createTextOutput(JSON.stringify({ "result": "success" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ "result": "error", "error": error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
